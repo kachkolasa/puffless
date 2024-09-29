@@ -1,0 +1,7 @@
+{
+  "name": "Puffless",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react-vite"
+}
