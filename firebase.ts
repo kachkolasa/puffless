@@ -1,6 +1,7 @@
 import { initializeApp } from "firebase/app";
 import { onAuthStateChanged } from "firebase/auth";
-import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile, setPersistence, indexedDBLocalPersistence, initializeAuth } from "firebase/auth";
+import {Capacitor} from "@capacitor/core";
 
 const firebaseConfig = {
     apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -14,7 +15,19 @@ const firebaseConfig = {
 
 
 const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
+function whichAuth() {
+    let auth
+    if (Capacitor.isNativePlatform()) {
+        auth = initializeAuth(app, {
+            persistence: indexedDBLocalPersistence
+        })
+    } else {
+        auth = getAuth()
+    }
+    return auth
+}
+
+const auth = whichAuth()
 
 export async function login(email: string, password: string) {
     try {
@@ -57,7 +70,7 @@ export async function logout() {
     }
 }
 
-export function getCurrentUser(): Promise<any> {
+export async function getCurrentUser(): Promise<any> {
     return new Promise((resolve, reject) => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
             unsubscribe(); // Stop listening after we get the result
