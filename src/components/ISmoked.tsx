@@ -1,6 +1,6 @@
 import {IonButton, useIonAlert} from "@ionic/react";
 import {db, getCurrentUser} from "../../firebase";
-import {doc, setDoc} from "@firebase/firestore";
+import {doc, setDoc, addDoc, collection} from "@firebase/firestore";
 import {useState} from "react";
 import {userSlice} from "../redux/slices/userSlice";
 import {useDispatch} from "react-redux";
@@ -16,15 +16,26 @@ const ISmoked = () => {
 
         const currentUser = await getCurrentUser();
         const data = {
-            uid: currentUser.uid,
-            smokedAt: new Date().toISOString()
+            smokedAt: new Date().toISOString(),
         };
 
-        try{
-            const docRef = doc(db, 'userCigarette', currentUser.uid);
-            await setDoc(docRef, data);
+        try {
+            // Use addDoc to add a new document to the 'userCigarette' collection
+            const docRef = collection(db, 'userCigarette', currentUser.uid, 'cigarettes');
+            await addDoc(docRef, data);
             setIsLoading(false);
-        } catch (error){
+
+            // Dispatch the action to update the last cigarette in the Redux store
+            dispatch(userSlice.actions.setLastCigarette(data));
+
+            // Show success alert
+            await presentAlert({
+                header: 'Smoked',
+                message: 'Your cigarette has been recorded.',
+                buttons: ['OK'],
+            });
+
+        } catch (error) {
             console.error('Error saving smoke:', error);
             await presentAlert({
                 header: 'Error',
@@ -35,15 +46,7 @@ const ISmoked = () => {
             setIsLoading(false);
             return;
         }
-
-        dispatch(userSlice.actions.setLastCigarette(data));
-
-        await presentAlert({
-            header: 'Smoked',
-            message: 'Your cigarette has been recorded. You should be ashamed of yourself.',
-            buttons: ['OK'],
-        });
-    }
+    };
 
     return (
         <IonButton color={"danger"} size={"large"} expand={"full"} shape={"round"} disabled={isLoading} onClick={handleSmoked}>

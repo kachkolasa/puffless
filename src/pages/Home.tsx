@@ -18,6 +18,9 @@ import {useSelector} from "react-redux";
 import KYC from "../components/KYC";
 import Timer from "../components/Timer";
 import ISmoked from "../components/ISmoked";
+import MoneySaved from "../components/MoneySaved";
+import TotalSmoked from "../components/TotalSmoked";
+import AvgPerDay from "../components/AvgPerDay";
 
 const Home: React.FC = () => {
     const isKYCDone = useSelector((state: any) => state.user.isKYCDone);
@@ -31,6 +34,12 @@ const Home: React.FC = () => {
                 <>
                     <Timer />
                     <ISmoked />
+                    <MoneySaved />
+
+                    <div className="grid grid-cols-2">
+                        <TotalSmoked />
+                        <AvgPerDay />
+                    </div>
                 </>
             )}
 

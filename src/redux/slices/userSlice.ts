@@ -3,13 +3,17 @@ import { createSlice } from '@reduxjs/toolkit'
 export interface userState {
     isKYCDone: boolean,
     userGoal: any,
-    lastCigarette: any
+    lastCigarette: any,
+    totalCigarettes: number,
+    totalDays?: number
 }
 
 const initialState: userState = {
     isKYCDone: false,
     userGoal: {},
-    lastCigarette: {}
+    lastCigarette: {},
+    totalCigarettes: 0,
+    totalDays: 0
 }
 
 export const userSlice = createSlice({
@@ -25,6 +29,12 @@ export const userSlice = createSlice({
         setLastCigarette: (state, action) => {
             state.lastCigarette = action.payload
         },
+        setTotalCigarettes: (state, action) => {
+            state.totalCigarettes = action.payload
+        },
+        setTotalDays: (state, action) => {
+            state.totalDays = action.payload
+        }
     },
 })
 

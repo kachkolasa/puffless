@@ -2,7 +2,7 @@ import { Redirect, Route } from 'react-router-dom';
 import {IonApp, IonLoading, IonRouterOutlet, setupIonicReact} from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import Home from './pages/Home';
-import { getDoc, doc } from '@firebase/firestore';
+import { getDoc, doc, collection, orderBy, limit, query, getDocs } from '@firebase/firestore';
 import { db } from '../firebase';
 
 
@@ -65,11 +65,7 @@ const App: React.FC = () => {
 
                 // Check if the user has completed KYC
                 const userGoalDocRef = doc(db, 'userGoal', currentUser.uid);
-                const lastCigDocRef = doc(db, 'userCigarette', currentUser.uid);
-
                 const userGoalDSnap = await getDoc(userGoalDocRef);
-                const lastCigDSnap = await getDoc(lastCigDocRef);
-
                 if (userGoalDSnap.exists()) {
                     dispatch(userSlice.actions.setKYC(true));
                     dispatch(userSlice.actions.setUserGoal(userGoalDSnap.data()));
@@ -77,8 +73,18 @@ const App: React.FC = () => {
                     dispatch(userSlice.actions.setKYC(false));
                 }
 
-                if (lastCigDSnap.exists()) {
-                    dispatch(userSlice.actions.setLastCigarette(lastCigDSnap.data()));
+                const userCigaretteRef = collection(db, 'userCigarette', currentUser.uid, 'cigarettes');
+                const q = query(userCigaretteRef, orderBy('smokedAt', 'desc'), limit(1));
+                try {
+                    const querySnapshot = await getDocs(q);
+                    if (!querySnapshot.empty) {
+                        const lastCigaretteData = querySnapshot.docs[0].data();
+                        dispatch(userSlice.actions.setLastCigarette(lastCigaretteData));
+                    } else {
+                        console.log('No cigarettes found.');
+                    }
+                } catch (error) {
+                    console.error('Error fetching last cigarette: ', error);
                 }
 
             } catch (error) {
