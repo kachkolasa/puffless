@@ -1,24 +1,34 @@
-import {IonContent, IonHeader, IonPage, IonText, IonTitle, IonToolbar} from '@ionic/react';
-import ExploreContainer from '../components/ExploreContainer';
+import {
+    IonButtons,
+    IonContent,
+    IonHeader,
+    IonMenu,
+    IonMenuButton,
+    IonPage,
+    IonText,
+    IonTitle,
+    IonToolbar
+} from '@ionic/react';
 import './Home.css';
+import Layout from "../components/Layout";
+import {useEffect, useState} from "react";
+import {getCurrentUser} from "../../firebase";
+import {useSelector} from "react-redux";
+import KYC from "../components/KYC";
 
 const Home: React.FC = () => {
+    const isKYCDone = useSelector((state: any) => state.user.isKYCDone);
+
   return (
-    <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <IonTitle>Puffless</IonTitle>
-        </IonToolbar>
-      </IonHeader>
-      <IonContent fullscreen>
-        <IonHeader collapse="condense">
-          <IonToolbar>
-            <IonTitle size="large">Puffless2</IonTitle>
-          </IonToolbar>
-        </IonHeader>
-          <IonText>Welcome onboard</IonText>
-      </IonContent>
-    </IonPage>
+    <>
+        <Layout>
+            {isKYCDone && (
+                <IonText>This is the home page.</IonText>
+            )}
+
+            {!isKYCDone && <KYC />}
+        </Layout>
+    </>
   );
 };
 

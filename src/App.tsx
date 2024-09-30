@@ -2,6 +2,9 @@ import { Redirect, Route } from 'react-router-dom';
 import {IonApp, IonLoading, IonRouterOutlet, setupIonicReact} from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import Home from './pages/Home';
+import { getDoc, doc } from '@firebase/firestore';
+import { db } from '../firebase';
+
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -40,6 +43,7 @@ import {store} from "./redux/store";
 import {useEffect, useState} from "react";
 import {getCurrentUser} from "../firebase";
 import {authSlice} from "./redux/slices/authSlice";
+import {userSlice} from "./redux/slices/userSlice";
 
 setupIonicReact();
 
@@ -58,6 +62,17 @@ const App: React.FC = () => {
                 } else {
                     dispatch(authSlice.actions.logout());
                 }
+
+                // Check if the user has completed KYC
+                const docRef = doc(db, 'userGoal', currentUser.uid);
+                const docSnap = await getDoc(docRef);
+
+                if (docSnap.exists()) {
+                    dispatch(userSlice.actions.setKYC(true));
+                } else {
+                    dispatch(userSlice.actions.setKYC(false));
+                }
+
             } catch (error) {
                 console.error('Error during authentication:', error);
             } finally {

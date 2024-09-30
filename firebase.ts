@@ -1,7 +1,7 @@
 import { initializeApp } from "firebase/app";
-import { onAuthStateChanged } from "firebase/auth";
-import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile, setPersistence, indexedDBLocalPersistence, initializeAuth } from "firebase/auth";
+import { onAuthStateChanged, getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile, setPersistence, indexedDBLocalPersistence, initializeAuth } from "firebase/auth";
 import {Capacitor} from "@capacitor/core";
+import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
     apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -28,6 +28,7 @@ function whichAuth() {
 }
 
 const auth = whichAuth()
+export const db = getFirestore(app);
 
 export async function login(email: string, password: string) {
     try {
