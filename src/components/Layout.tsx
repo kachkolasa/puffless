@@ -24,26 +24,27 @@ const Layout = ({children}: {children: React.ReactNode}) => {
 
     return (
         <>
-            <IonMenu contentId="main-content">
-                <IonHeader>
-                    <IonToolbar>
-                        <div className="flex items-center justify-between pr-5">
-                            <IonTitle>Menu</IonTitle>
-                            <IonButtons slot="end">
-                                <IonIcon icon={powerOutline} className={"text-xl cursor-pointer"} onClick={handleLogout}></IonIcon>
-                            </IonButtons>
-                        </div>
-                    </IonToolbar>
-                </IonHeader>
-                <IonContent className="ion-padding">This is the menu content.</IonContent>
-            </IonMenu>
+            {/*<IonMenu contentId="main-content">*/}
+            {/*    <IonHeader>*/}
+            {/*        <IonToolbar>*/}
+            {/*            <div className="flex items-center justify-between pr-5">*/}
+            {/*                <IonTitle>Menu</IonTitle>*/}
+            {/*                <IonButtons slot="end">*/}
+            {/*                    <IonIcon icon={powerOutline} className={"text-xl cursor-pointer"} onClick={handleLogout}></IonIcon>*/}
+            {/*                </IonButtons>*/}
+            {/*            </div>*/}
+            {/*        </IonToolbar>*/}
+            {/*    </IonHeader>*/}
+            {/*    <IonContent className="ion-padding">This is the menu content.</IonContent>*/}
+            {/*</IonMenu>*/}
             <IonPage id="main-content">
                 <IonHeader>
                     <IonToolbar>
-                        <IonButtons slot="start">
-                            <IonMenuButton></IonMenuButton>
-                        </IonButtons>
+                        {/*<IonButtons slot="start">*/}
+                        {/*    <IonMenuButton></IonMenuButton>*/}
+                        {/*</IonButtons>*/}
                         <IonTitle>Puffless</IonTitle>
+                        <IonIcon icon={powerOutline} className={"text-xl cursor-pointer mr-5"} slot={"end"} onClick={handleLogout}></IonIcon>
                     </IonToolbar>
                 </IonHeader>
                 <IonContent className="ion-padding">
