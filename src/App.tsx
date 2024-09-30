@@ -1,5 +1,5 @@
 import { Redirect, Route } from 'react-router-dom';
-import { IonApp, IonRouterOutlet, setupIonicReact } from '@ionic/react';
+import {IonApp, IonLoading, IonRouterOutlet, setupIonicReact} from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import Home from './pages/Home';
 
@@ -32,22 +32,75 @@ import '@ionic/react/css/palettes/dark.system.css';
 
 /* Theme variables */
 import './theme/variables.css';
+import './theme/globals.scss';
+import Login from "./pages/Auth/Login";
+import Register from "./pages/Auth/Register";
+import {Provider, useDispatch, useSelector} from "react-redux";
+import {store} from "./redux/store";
+import {useEffect, useState} from "react";
+import {getCurrentUser} from "../firebase";
+import {authSlice} from "./redux/slices/authSlice";
 
 setupIonicReact();
 
-const App: React.FC = () => (
-  <IonApp>
-    <IonReactRouter>
-      <IonRouterOutlet>
-        <Route exact path="/home">
-          <Home />
-        </Route>
-        <Route exact path="/">
-          <Redirect to="/home" />
-        </Route>
-      </IonRouterOutlet>
-    </IonReactRouter>
-  </IonApp>
-);
+const App: React.FC = () => {
+  const isLoggedIn = useSelector((state: any) => state.auth.isLoggedIn);
+  const [isAuthenticating, setIsAuthenticating] = useState(true);
+  const dispatch = useDispatch();
+
+    useEffect(() => {
+        const checkAuth = async () => {
+            try {
+                const currentUser = await getCurrentUser();
+
+                if (currentUser) {
+                    dispatch(authSlice.actions.login());
+                } else {
+                    dispatch(authSlice.actions.logout());
+                }
+            } catch (error) {
+                console.error('Error during authentication:', error);
+            } finally {
+                setIsAuthenticating(false);
+            }
+        };
+
+        checkAuth();
+    }, [dispatch]);
+
+    if(isAuthenticating){
+        return <IonLoading message="Just a second..." duration={0} isOpen={true} />
+    }
+
+  return (
+      <IonApp>
+        <IonReactRouter>
+          <IonRouterOutlet>
+            <Route
+                exact
+                path="/"
+                render={(props) => {
+                  return isLoggedIn ? <Home /> : <Redirect to={"/login"} />;
+                }}
+            />
+            <Route
+                exact
+                path="/login"
+                render={(props) => {
+                    return isLoggedIn ? <Redirect to={"/"} /> : <Login />;
+                }}
+            />
+            <Route
+                exact
+                path="/register"
+                render={(props) => {
+                    return isLoggedIn ? <Redirect to={"/"} /> : <Register />;
+                }}
+            />
+          </IonRouterOutlet>
+        </IonReactRouter>
+      </IonApp>
+  )
+};
 
 export default App;
