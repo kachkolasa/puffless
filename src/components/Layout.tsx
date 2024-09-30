@@ -2,7 +2,7 @@ import {
     IonButton,
     IonButtons,
     IonContent,
-    IonHeader, IonIcon,
+    IonHeader, IonIcon, IonImg,
     IonMenu,
     IonMenuButton,
     IonPage,
@@ -43,6 +43,7 @@ const Layout = ({children}: {children: React.ReactNode}) => {
                         {/*<IonButtons slot="start">*/}
                         {/*    <IonMenuButton></IonMenuButton>*/}
                         {/*</IonButtons>*/}
+                        <IonImg src={"/logo.png"} className={"w-10 h-10 ml-5"} slot={"start"}></IonImg>
                         <IonTitle>Puffless</IonTitle>
                         <IonIcon icon={powerOutline} className={"text-xl cursor-pointer mr-5"} slot={"end"} onClick={handleLogout}></IonIcon>
                     </IonToolbar>

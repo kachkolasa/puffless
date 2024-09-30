@@ -40,12 +40,16 @@ const Home: React.FC = () => {
                         <TotalSmoked />
                         <AvgPerDay />
                     </div>
+
+                    <IonText>
+                        <p className={"mt-5 text-center text-gray-400 dark:text-gray-600"}>Built by Kachkol Asa for no absolute Reasons</p>
+                    </IonText>
                 </>
             )}
 
         </Layout>
     </>
-  );
+    );
 };
 
 export default Home;
