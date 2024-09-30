@@ -1,11 +1,15 @@
 import { createSlice } from '@reduxjs/toolkit'
 
 export interface userState {
-    isKYCDone: boolean
+    isKYCDone: boolean,
+    userGoal: any,
+    lastCigarette: any
 }
 
 const initialState: userState = {
-    isKYCDone: false
+    isKYCDone: false,
+    userGoal: {},
+    lastCigarette: {}
 }
 
 export const userSlice = createSlice({
@@ -14,7 +18,13 @@ export const userSlice = createSlice({
     reducers: {
         setKYC: (state, action) => {
             state.isKYCDone = action.payload
-        }
+        },
+        setUserGoal: (state, action) => {
+            state.userGoal = action.payload
+        },
+        setLastCigarette: (state, action) => {
+            state.lastCigarette = action.payload
+        },
     },
 })
 

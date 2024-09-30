@@ -1,5 +1,6 @@
 import {
-    IonButtons,
+    IonButton,
+    IonButtons, IonCard, IonCardContent,
     IonContent,
     IonHeader,
     IonMenu,
@@ -15,18 +16,24 @@ import {useEffect, useState} from "react";
 import {getCurrentUser} from "../../firebase";
 import {useSelector} from "react-redux";
 import KYC from "../components/KYC";
+import Timer from "../components/Timer";
+import ISmoked from "../components/ISmoked";
 
 const Home: React.FC = () => {
     const isKYCDone = useSelector((state: any) => state.user.isKYCDone);
 
-  return (
+    return (
     <>
         <Layout>
+            {!isKYCDone && <KYC />}
+
             {isKYCDone && (
-                <IonText>This is the home page.</IonText>
+                <>
+                    <Timer />
+                    <ISmoked />
+                </>
             )}
 
-            {!isKYCDone && <KYC />}
         </Layout>
     </>
   );

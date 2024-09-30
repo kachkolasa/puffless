@@ -64,13 +64,21 @@ const App: React.FC = () => {
                 }
 
                 // Check if the user has completed KYC
-                const docRef = doc(db, 'userGoal', currentUser.uid);
-                const docSnap = await getDoc(docRef);
+                const userGoalDocRef = doc(db, 'userGoal', currentUser.uid);
+                const lastCigDocRef = doc(db, 'userCigarette', currentUser.uid);
 
-                if (docSnap.exists()) {
+                const userGoalDSnap = await getDoc(userGoalDocRef);
+                const lastCigDSnap = await getDoc(lastCigDocRef);
+
+                if (userGoalDSnap.exists()) {
                     dispatch(userSlice.actions.setKYC(true));
+                    dispatch(userSlice.actions.setUserGoal(userGoalDSnap.data()));
                 } else {
                     dispatch(userSlice.actions.setKYC(false));
+                }
+
+                if (lastCigDSnap.exists()) {
+                    dispatch(userSlice.actions.setLastCigarette(lastCigDSnap.data()));
                 }
 
             } catch (error) {
